@@ -2,7 +2,10 @@ import {
     useQuery,
     useMutation,
     useQueryClient,
-    useInfiniteQuery
+    useInfiniteQuery,
+    UseInfiniteQueryResult,
+    UseInfiniteQueryOptions,
+    InfiniteData
 } from "@tanstack/react-query"
 
 
@@ -35,22 +38,25 @@ export const useCreateUserAccount = () => {
   // POST QUERIES
   // ============================================================
   
-  export const useGetPosts = () => {
-    return useInfiniteQuery({
-      queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-      queryFn: getInfinitePosts as any,
-      getNextPageParam: (lastPage: any) => {
-        // If there's no data, there are no more pages.
-        if (lastPage && lastPage.documents.length === 0) {
-          return null;
-        }
-  
-        // Use the $id of the last document as the cursor.
-        const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
-        return lastId;
-      },
-    });
-  };
+
+
+export const useGetPosts = (): UseInfiniteQueryResult<any, Error> => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+    queryFn: getInfinitePosts as any,
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage && lastPage.documents.length === 0) {
+        return null;
+      }
+
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
+    // Add an initialPageParam property to satisfy TypeScript
+    initialPageParam: null,
+  } as UseInfiniteQueryOptions<any, Error, InfiniteData<any, unknown>>);
+};
+
   
   export const useSearchPosts = (searchTerm: string) => {
     return useQuery({
