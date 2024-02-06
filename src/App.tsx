@@ -5,6 +5,7 @@ import { AllUsers, CreatePost, EditPost, Explore, Home, PostDetails, Profile, Sa
 import SignupForm from './_auth/forms/SignupForm';
 import AuthLayout from './_auth/AuthLayout';
 import RootLayout from './_root/RootLayout';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { Toaster } from "@/components/ui/toaster";
 
@@ -32,7 +33,7 @@ const App = () => {
           <Route path="/update-profile/:id" element={<UpdateProfile />} />
               </Route>
       </Routes>
-      
+      <SpeedInsights />
       <Toaster />
     </main>
   )
